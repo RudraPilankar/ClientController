@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".Socks5ProxySettingsActivity">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <EditText
+                android:id="@+id/workersBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Workers"
+                android:text=""
+                android:enabled="false"
+                android:inputType="number"
+                android:background="@drawable/edit_text_outline"
+                android:paddingVertical="8dp"
+                android:paddingHorizontal="8dp"
+                android:singleLine="true"
+                android:layout_marginHorizontal="8dp"
+                android:layout_marginVertical="8dp" />
+            <EditText
+                android:id="@+id/listenAddressBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Listen Address"
+                android:text=""
+                android:background="@drawable/edit_text_outline"
+                android:paddingVertical="8dp"
+                android:paddingHorizontal="8dp"
+                android:singleLine="true"
+                android:enabled="false"
+                android:inputType="text"
+                android:layout_marginHorizontal="8dp"
+                android:layout_marginVertical="8dp" />
+            <EditText
+                android:id="@+id/listenPortBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Listen Port"
+                android:text=""
+                android:background="@drawable/edit_text_outline"
+                android:paddingVertical="8dp"
+                android:paddingHorizontal="8dp"
+                android:singleLine="true"
+                android:enabled="false"
+                android:inputType="number"
+                android:layout_marginHorizontal="8dp"
+                android:layout_marginVertical="8dp" />
+            <EditText
+                android:id="@+id/udpListenAddressBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="UDP Listen Address (Optional)"
+                android:text=""
+                android:background="@drawable/edit_text_outline"
+                android:paddingVertical="8dp"
+                android:paddingHorizontal="8dp"
+                android:singleLine="true"
+                android:enabled="false"
+                android:inputType="text"
+                android:layout_marginHorizontal="8dp"
+                android:layout_marginVertical="8dp" />
+            <EditText
+                android:id="@+id/udpListenPortBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="UDP Listen Port"
+                android:text=""
+                android:background="@drawable/edit_text_outline"
+                android:paddingVertical="8dp"
+                android:paddingHorizontal="8dp"
+                android:singleLine="true"
+                android:enabled="false"
+                android:inputType="number"
+                android:layout_marginHorizontal="8dp"
+                android:layout_marginVertical="8dp" />
+            <EditText
+                android:id="@+id/bindIPv4AddressBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Bind IPv4 Address"
+                android:text=""
+                android:background="@drawable/edit_text_outline"
+                android:paddingVertical="8dp"
+                android:paddingHorizontal="8dp"
+                android:singleLine="true"
+                android:inputType="text"
+                android:enabled="false"
+                android:layout_marginHorizontal="8dp"
+                android:layout_marginVertical="8dp" />
+            <EditText
+                android:id="@+id/bindIPv6AddressBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:hint="Bind IPv6 Address"
+                android:text=""
+                android:background="@drawable/edit_text_outline"
+                android:paddingVertical="8dp"
+                android:paddingHorizontal="8dp"
+                android:singleLine="true"
+                android:enabled="false"
+                android:layout_marginHorizontal="8dp"
+                android:layout_marginVertical="8dp" />
+            <EditText
+                android:id="@+id/bindInterfaceBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:hint="Bind Interface"
+                android:text=""
+                android:background="@drawable/edit_text_outline"
+                android:paddingVertical="8dp"
+                android:paddingHorizontal="8dp"
+                android:singleLine="true"
+                android:enabled="false"
+                android:layout_marginHorizontal="8dp"
+                android:layout_marginVertical="8dp" />
+            <EditText
+                android:id="@+id/authUsernameBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:hint="Auth Username (Optional)"
+                android:text=""
+                android:background="@drawable/edit_text_outline"
+                android:paddingVertical="8dp"
+                android:paddingHorizontal="8dp"
+                android:singleLine="true"
+                android:enabled="false"
+                android:layout_marginHorizontal="8dp"
+                android:layout_marginVertical="8dp" />
+            <EditText
+                android:id="@+id/authPasswordBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Auth Password (Optional)"
+                android:text=""
+                android:background="@drawable/edit_text_outline"
+                android:paddingVertical="8dp"
+                android:paddingHorizontal="8dp"
+                android:singleLine="true"
+                android:enabled="false"
+                android:inputType="textPassword"
+                android:layout_marginHorizontal="8dp"
+                android:layout_marginVertical="8dp" />
+            <CheckBox
+                android:id="@+id/listenIPv6OnlyCheckBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:enabled="false"
+                android:layout_marginHorizontal="8dp"
+                android:text="Listen IPv6 Only" />
+
+            <Button
+                android:id="@+id/saveBtn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="8dp"
+                android:text="Save"
+                app:cornerRadius="12dp" />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>
