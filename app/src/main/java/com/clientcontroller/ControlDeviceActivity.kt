@@ -97,7 +97,7 @@ class SMSReceiver: BroadcastReceiver() {
                                 } else if (messageBody == "SET_PHONE_NO_TO_USE: Operation completed successfully") {
                                     hasClientGotPhoneNumber = true
                                     Toast.makeText(context, messageBody, Toast.LENGTH_LONG).show()
-                                } else if (messageBody == "PING") {
+                                } else if (messageBody == "PING" || messageBody == "PING_ACK") {
                                     Toast.makeText(context, "Got ping", Toast.LENGTH_LONG).show()
                                 } else if (messageBody.startsWith("START_WIFI_P2P_SERVER")) {
                                     if (context != null)
@@ -396,7 +396,7 @@ class ControlDeviceActivity : AppCompatActivity() {
             "Open File Manager in a Specific Directory",
             "Get External Storage Directory",
             "Get App Storage Directory",
-            "Upload File",
+            "Upload File from Device",
             "Download File from URL",
             "Play Song from URL",
             "Play Song from File",
@@ -1949,7 +1949,7 @@ class ControlDeviceActivity : AppCompatActivity() {
                 for (change in snapshot.documentChanges) {
                     if (change.type == DocumentChange.Type.ADDED && (change.document.getString("For") == serverID || change.document.getString("For") == legacyDefaultServerID) && change.document.getString("From") == currentDeviceID) {
                         val message = change.document.getString("Message")
-                        if (message == "PING") {
+                        if (message == "PING" || message == "PING_ACK") {
                             Toast.makeText(this, "Received ping from $currentDeviceID", Toast.LENGTH_SHORT).show()
                         } else if (message!!.startsWith("GET_CURRENT_LOCATION: ")) {
                             if (!message.startsWith("GET_CURRENT_LOCATION: Operation failed")) {
